@@ -4,11 +4,6 @@
     <div class="row">
         <div class="col-md-3">
             <p class="lead">Yelp Camp</p>
-            <div class="list-group">
-                <li class="list-group-item">Info1</li>
-                <li class="list-group-item">Info2</li>
-                <li class="list-group-item">Info3</li>
-            </div>
             <div id="map"></div>
         </div>
         <div class="col-md-9">
@@ -19,9 +14,30 @@
                         <h4><a href=""><%= campground.name %></a></h4>
                         <caption>$<%= campground.price %>/night</caption>
                     </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <form action="/campgrounds/<%= campground._id %>/like" method="POST">
+                            <% if (currentUser && campground.likes.some(function (like) {
+                                return like.equals(currentUser._id)
+                            })) { %>
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="fas fa-thumbs-up"></i> Liked (<%= campground.likes.length %>)
+                                </button>
+                            <% } else { %>
+                                <button class="btn btn-sm btn-secondary">
+                                    <i class="fas fa-thumbs-up"></i> Like (<%= campground.likes.length %>)
+                                </button>
+                            <% } %>
+                        </form>
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
+                                data-target="#campgroundLikes">
+                            <div>Total likes: <i class="fas fa-thumbs-up"></i> <%= campground.likes.length %></div>
+                        </button>
+                    </div>
                     <p><%= campground.description %></p>
                     <p>
-                        <em>Submitted by: <a href="/users/<%= campground.author.id %>"><%= campground.author.username %></a>, <%= moment(campground.createdAt).fromNow() %></em>
+                        <em>Submitted by: <a
+                                    href="/users/<%= campground.author.id %>"><%= campground.author.username %></a>, <%= moment(campground.createdAt).fromNow() %>
+                        </em>
                     </p>
                     <% if(currentUser && campground.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
                         <div class="d-flex">
@@ -36,7 +52,7 @@
             </div>
             <div class="card card-body bg-light">
                 <div class="text-right">
-                    <a class="btn btn-success mb-1" href="/campgrounds/<%= campground._id %>/comments/new">Add New
+                    <a class="btn btn-secondary mb-1" href="/campgrounds/<%= campground._id %>/comments/new">Add New
                         Comment</a>
                 </div>
                 <hr>

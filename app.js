@@ -17,8 +17,9 @@ const express = require("express"),
     indexRoutes = require("./routes/index");
 
 // seedDB();
-mongoose.set('useUnifiedTopology', true);
-mongoose.connect('mongodb://localhost:27017/camp', {useNewUrlParser: true});
+mongoose.set("useUnifiedTopology", true);
+// mongoose.connect('mongodb://localhost:27017/camp', {useNewUrlParser: true});
+mongoose.connect("mongodb+srv://robertaben:" + process.env.DBPASS + "@cluster0-qjs4i.mongodb.net/test?retryWrites=true&w=majority",  {useNewUrlParser: true} );
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
@@ -43,15 +44,15 @@ app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     next();
 });
-app.locals.moment = require('moment');
+app.locals.moment = require("moment");
 
 // requiring routes
 app.use(indexRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
 
-app.listen(3000, () => {
-    console.log('Server listening on port 3000');
+app.listen(process.env.PORT || 3000, () => {
+    console.log("The server is live");
 });
 
 
